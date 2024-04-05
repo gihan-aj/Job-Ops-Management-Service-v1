@@ -8,10 +8,10 @@ namespace JobOps.Domain.Entities
 {
     public class Employee
     {
-        public required string EmployeeId { get; set; }
+        public required string Id { get; set; }
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public JobTitle? JobTitle { get; set; }
-        public Department? Department { get; set;}
+        public Section? section { get; set;}
     }
 }

@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace JobOps.Domain.Entities
 {
-    public class Department
+    public class Section
     {
         public required string Id { get; set; }
         public required string Name { get; set; }
-        public List<Section>? Sections { get; set; } 
+        public string Description { get; set; } = string.Empty;
     }
 }
