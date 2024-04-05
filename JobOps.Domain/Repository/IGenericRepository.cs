@@ -9,7 +9,7 @@ namespace JobOps.Domain.Repository
 {
     public interface IGenericRepository<T> where T : class
     {
-        T GetByIdAsync(int id);
+        T GetByIdAsync(string id);
         IEnumerable<T> GetAllAsync();
         IEnumerable<T> FindAsync(Expression<Func<T, bool>> predicate);
         void AddAsync(T entity);

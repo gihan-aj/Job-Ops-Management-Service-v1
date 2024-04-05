@@ -11,7 +11,9 @@ namespace JobOps.Domain.Entities
         public required string Id { get; set; }
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
+        public string JobId { get; set; } = string.Empty;
         public JobTitle? JobTitle { get; set; }
-        public Section? section { get; set;}
+        public string SectionId { get; set; } = string.Empty;
+        public List<Section> Sections { get; } = [];
     }
 }

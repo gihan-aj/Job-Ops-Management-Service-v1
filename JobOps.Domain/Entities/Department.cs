@@ -10,6 +10,6 @@ namespace JobOps.Domain.Entities
     {
         public required string Id { get; set; }
         public required string Name { get; set; }
-        public List<Section>? Sections { get; set; } 
+        public ICollection<Section>? Sections { get; set; } 
     }
 }

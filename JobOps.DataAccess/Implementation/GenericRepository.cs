@@ -30,7 +30,7 @@ namespace JobOps.DataAccess.Implementation
             throw new NotImplementedException();
         }
 
-        public T GetByIdAsync(int id)
+        public T GetByIdAsync(string id)
         {
             throw new NotImplementedException();
         }
