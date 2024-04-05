@@ -9,13 +9,13 @@ namespace JobOps.Domain.Repository
 {
     public interface IGenericRepository<T> where T : class
     {
-        T GetByIdAsync(string id);
-        IEnumerable<T> GetAllAsync();
-        IEnumerable<T> FindAsync(Expression<Func<T, bool>> predicate);
-        void AddAsync(T entity);
-        void AddRangeAsync (IEnumerable<T> entities);
-        T RemoveAsync(T entity);
-        IEnumerable<T> RemoveRangeAsync (IEnumerable<T> entities);
-        void UpdateAsync(T entity);
+        T GetById(string id);
+        IEnumerable<T> GetAll();
+        IEnumerable<T> Find(Expression<Func<T, bool>> predicate);
+        void Add(T entity);
+        void AddRange (IEnumerable<T> entities);
+        void Remove(T entity);
+        void RemoveRange (IEnumerable<T> entities);
+        void Update(T entity);
     }
 }

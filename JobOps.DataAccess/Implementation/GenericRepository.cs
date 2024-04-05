@@ -1,4 +1,6 @@
-﻿using JobOps.Domain.Repository;
+﻿using JobOps.DataAccess.Context;
+using JobOps.Domain.Repository;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,44 +12,51 @@ namespace JobOps.DataAccess.Implementation
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        public void AddAsync(T entity)
+        private readonly JobOpsDbContext _context;
+
+        public GenericRepository(JobOpsDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public void AddRangeAsync(IEnumerable<T> entities)
+        public void Add(T entity)
         {
-            throw new NotImplementedException();
+            _context.Set<T>().AddAsync(entity);
         }
 
-        public IEnumerable<T> FindAsync(Expression<Func<T, bool>> predicate)
+        public void AddRange(IEnumerable<T> entities)
         {
-            throw new NotImplementedException();
+           _context.Set<T>().AddRangeAsync(entities);
         }
 
-        public IEnumerable<T> GetAllAsync()
+        public IEnumerable<T> Find(Expression<Func<T, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return _context.Set<T>().Where(predicate);
         }
 
-        public T GetByIdAsync(string id)
+        public IEnumerable<T> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Set<T>().ToList();
         }
 
-        public T RemoveAsync(T entity)
+        public T GetById(string id)
         {
-            throw new NotImplementedException();
+            return _context.Set<T>().Find(id);       
         }
 
-        public IEnumerable<T> RemoveRangeAsync(IEnumerable<T> entities)
+        public void Remove(T entity)
         {
-            throw new NotImplementedException();
+            _context.Set<T>().Remove(entity);
         }
 
-        public void UpdateAsync(T entity)
+        public void RemoveRange(IEnumerable<T> entities)
         {
-            throw new NotImplementedException();
+            _context.Set<T>().RemoveRange(entities);
+        }
+
+        public void Update(T entity)
+        {
+            _context.Entry(entity).State = EntityState.Modified;
         }
     }
 }
