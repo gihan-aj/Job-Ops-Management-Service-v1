@@ -1,3 +1,9 @@
+using JobOps.DataAccess.Context;
+using JobOps.DataAccess.Implementation;
+using JobOps.Domain.Repository;
+using LoggerLib;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +12,16 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Entity Framework
+builder.Services.AddDbContext<JobOpsDbContext>(options
+    => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("JobOpsAPI")));
+
+// Unit of work
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+// Logger library
+builder.Services.AddSingleton<IFileLogger, FileLogger>();
 
 var app = builder.Build();
 

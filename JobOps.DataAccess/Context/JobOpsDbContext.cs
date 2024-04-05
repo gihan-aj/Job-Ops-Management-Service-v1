@@ -25,7 +25,8 @@ namespace JobOps.DataAccess.Context
             modelBuilder.Entity<Department>()
                 .HasMany(d => d.Sections)
                 .WithOne(s => s.Department)
-                .HasForeignKey(s => s.DepartmentId);
+                .HasForeignKey(s => s.DepartmentId)
+                .IsRequired(false);
 
             modelBuilder.Entity<JobTitle>()
                 .HasMany(j => j.Employees)
@@ -35,13 +36,14 @@ namespace JobOps.DataAccess.Context
             modelBuilder.Entity<Section>()
                 .HasMany(s => s.Machines)
                 .WithOne(m => m.Section)
-                .HasForeignKey(m => m.SectionId);
+                .HasForeignKey(m => m.SectionId)
+                .IsRequired(false);
 
             modelBuilder.Entity<Section>()
                 .HasMany(s => s.Employees)
                 .WithMany(e => e.Sections)
                 .UsingEntity<SectionEmployee>();
-          
+
         }
     }
 }
