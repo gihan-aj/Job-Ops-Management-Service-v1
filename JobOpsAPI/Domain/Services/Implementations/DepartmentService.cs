@@ -26,6 +26,12 @@ namespace JobOpsAPI.Domain.Services.Implementations
                 if (string.IsNullOrEmpty(request.Id)) throw new ArgumentNullException(nameof(request.Id));
                 if (string.IsNullOrEmpty(request.Name)) throw new ArgumentNullException(nameof(request.Name));
 
+                var existingData = Repository.GetById(request.Id);
+                if (existingData != null)
+                {
+                    throw new InvalidOperationException($"Id already exists.");
+                }
+
                 var newDepartment = new Department()
                 {
                     Id = request.Id,
@@ -44,7 +50,7 @@ namespace JobOpsAPI.Domain.Services.Implementations
             }
         }
 
-        public void DeleteSingle(int user, string id)
+        public void SoftDeleteSingle(int user, string id)
         {
             try
             {
@@ -58,7 +64,7 @@ namespace JobOpsAPI.Domain.Services.Implementations
                 }
                 else
                 {
-                    throw new Exception($"Department({id}) does not exist");
+                    throw new Exception($"Id does not exist");
                 }
 
                 Repository.Update(department);
@@ -76,6 +82,10 @@ namespace JobOpsAPI.Domain.Services.Implementations
                 var department = Repository.GetById(id);
                 if (department != null)
                 {
+                    if(department.DeletedBy != null)
+                    {
+                        throw new Exception("Data already been deleted");
+                    }
                     var response = new DepartmentGetDTO()
                     {
                         Id = department.Id,
@@ -84,7 +94,7 @@ namespace JobOpsAPI.Domain.Services.Implementations
                     return response;
                 }
 
-                throw new Exception($"Department({id}) does not exist");
+                throw new Exception($"Data does not exist");
 
 
             }
@@ -144,10 +154,12 @@ namespace JobOpsAPI.Domain.Services.Implementations
                 if (department != null)
                 {
                     department.Name = request.Name;
+                    department.UpdatedBy = user;
+                    department.UpdatedOn = DateTime.Now;
                 }
                 else
                 {
-                    throw new Exception($"Department({request.Id}) does not exist");
+                    throw new Exception($"Id does not exist");
                 }
 
                 Repository.Update(department);

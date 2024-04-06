@@ -9,6 +9,6 @@ namespace JobOpsAPI.Domain.Services.Interfaces
         DepartmentGetDTO? GetById(string id);
         void AddSingle(int user, DepartmentPostDTO request);
         void UpdateSingle(int user, DepartmentPostDTO request);
-        void DeleteSingle(int user, string id);
+        void SoftDeleteSingle(int user, string id);
     }
 }

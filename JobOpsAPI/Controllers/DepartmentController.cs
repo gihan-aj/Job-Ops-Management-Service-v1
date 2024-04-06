@@ -5,7 +5,7 @@ using LoggerLib;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata.Ecma335;
-using static JobOpsAPI.Domain.DTOs.Department.DepartmentServiceResponses;
+using static JobOpsAPI.Domain.DTOs.ServiceResponses;
 
 namespace JobOpsAPI.Controllers
 {
@@ -96,6 +96,57 @@ namespace JobOpsAPI.Controllers
             {
                 _logger.LogError($"DepartmentController : Add() -> {ex.Message}");
                 _logger.LogError($"DepartmentController : Add() -> Exception : {ex}");
+                return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
+            }
+        }
+
+        [HttpPut("update")]
+        public ActionResult<DepartmentGetDTO> Update(int user, [FromBody]DepartmentPostDTO request)
+        {
+            try
+            {
+                _logger.LogInfo("DepartmentController : Update() called");
+
+                _dataService.Department.UpdateSingle(user, request);
+                _dataService.Save();
+
+                DepartmentGetDTO? department = _dataService.Department.GetById(request.Id);
+                if (department == null)
+                {
+                    _logger.LogInfo($"DepartmentController : Update() : Department({request.Id}) not found");
+                    return NotFound($"Department({request.Id}) not found.");
+                }
+
+                _logger.LogInfo("DepartmentController : Update() successful");
+
+                return Ok(department);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"DepartmentController : Update() -> {ex.Message}");
+                _logger.LogError($"DepartmentController : Update() -> Exception : {ex}");
+                return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
+            }
+        }
+
+        [HttpPut("delete")]
+        public ActionResult<DepartmentGetDTO> Delete(int user, string id)
+        {
+            try
+            {
+                _logger.LogInfo("DepartmentController : Delete() called");
+
+                _dataService.Department.SoftDeleteSingle(user, id);
+                _dataService.Save();
+
+                _logger.LogInfo("DepartmentController : Delete() successful");
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"DepartmentController : Delete() -> {ex.Message}");
+                _logger.LogError($"DepartmentController : Delete() -> Exception : {ex}");
                 return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
             }
         }
