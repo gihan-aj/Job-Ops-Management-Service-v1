@@ -1,12 +1,7 @@
-﻿using JobOps.Domain.Entities;
+﻿using JobOpsAPI.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace JobOps.DataAccess.Context
+namespace JobOpsAPI.DataAccess.Context
 {
     public class JobOpsDbContext : DbContext
     {
@@ -32,7 +27,7 @@ namespace JobOps.DataAccess.Context
             modelBuilder.Entity<JobTitle>()
                 .HasMany(j => j.Employees)
                 .WithOne(e => e.JobTitle)
-                .HasForeignKey(e => e.JobId)
+                .HasForeignKey(e => e.JobTitleId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Section>()
@@ -48,5 +43,6 @@ namespace JobOps.DataAccess.Context
                 .UsingEntity<SectionEmployee>();
 
         }
+
     }
 }

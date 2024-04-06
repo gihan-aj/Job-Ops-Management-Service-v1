@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JobOps.Domain.Repository
+namespace JobOps.Domain.Services.Interfaces
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IMasterDataService : IDisposable
     {
-        IDepartmentRepository Department { get; }
+        IDepartmentService Department { get; }
 
         int Save();
     }

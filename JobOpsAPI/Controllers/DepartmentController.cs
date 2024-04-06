@@ -1,8 +1,10 @@
-﻿using JobOps.Domain.Entities;
-using JobOps.Domain.Repository;
+﻿using JobOpsAPI.Domain.DTOs.Department;
+using JobOpsAPI.Domain.Entities;
+using JobOpsAPI.Domain.Services.Interfaces;
 using LoggerLib;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata.Ecma335;
 
 namespace JobOpsAPI.Controllers
 {
@@ -10,23 +12,23 @@ namespace JobOpsAPI.Controllers
     [ApiController]
     public class DepartmentController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMasterDataService _dataService;
         private readonly IFileLogger _logger;
 
-        public DepartmentController(IUnitOfWork unitOfWork, IFileLogger logger)
+        public DepartmentController(IMasterDataService dataService, IFileLogger logger)
         {
-            _unitOfWork = unitOfWork;
+            _dataService = dataService;
             _logger = logger;
         }
 
         [HttpGet]
-        public ActionResult<List<Department>> Get()
+        public ActionResult<List<DepartmentGetResponse>> Get(int page, int pageSize)
         {
             try
             {
                 _logger.LogInfo("DepartmentController : Get() called");
 
-                List<Department> departments = _unitOfWork.Department.GetAll().ToList();
+                List<DepartmentGetResponse>? departments = _dataService.Department.GetByPageNumber(page, pageSize).ToList();
 
                 if(departments != null && departments.Count > 0)
                 {
@@ -39,42 +41,54 @@ namespace JobOpsAPI.Controllers
             {
                 _logger.LogError($"DepartmentController : Get() -> {ex.Message}");
                 _logger.LogError($"DepartmentController : Get() -> Exception : {ex}");
-                return StatusCode(500, "Internal server error occurred.");
+                return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
             }
         }
 
         [HttpGet("id")]
-        public ActionResult<Department> GetById(string id)
+        public ActionResult<DepartmentGetResponse> GetById(string id)
         {
             try
             {
-                Department department = _unitOfWork.Department.GetById(id);
+                _logger.LogInfo("DepartmentController : GetById() called");
+
+                DepartmentGetResponse? department = _dataService.Department.GetById(id);
                 if(department == null)
                 {
-                    return NotFound("Department not found.");
+                    _logger.LogInfo($"DepartmentController : GetById() : Department({id}) not found");
+                    return NotFound($"Department({id}) not found.");
                 }
+
+                _logger.LogInfo("DepartmentController : GetById() successful");
                 return Ok(department);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                _logger.LogError($"DepartmentController : GetById() -> {ex.Message}");
+                _logger.LogError($"DepartmentController : GetById() -> Exception : {ex}");
+                return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
             }
         }
 
         [HttpPost]
-        public ActionResult<Department> Add(Department department)
+        public ActionResult<DepartmentGetResponse> Add(int user, [FromBody]DepartmentPostRequest department)
         {
             try
             {
-                _unitOfWork.Department.Add(department);
-                _unitOfWork.Save();
+                _logger.LogInfo("DepartmentController : Add() called");
+
+                _dataService.Department.AddSingle(user, department);
+                _dataService.Save();
+
+                _logger.LogInfo("DepartmentController : Add() successful");
 
                 return CreatedAtAction(nameof(GetById), new { id = department.Id }, department);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                _logger.LogError($"DepartmentController : Add() -> {ex.Message}");
+                _logger.LogError($"DepartmentController : Add() -> Exception : {ex}");
+                return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
             }
         }
     }

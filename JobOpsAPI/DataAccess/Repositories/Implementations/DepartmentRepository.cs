@@ -1,15 +1,10 @@
-﻿using JobOps.DataAccess.Context;
-using JobOps.Domain.Entities;
-using JobOps.Domain.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using JobOpsAPI.DataAccess.Context;
+using JobOpsAPI.DataAccess.Repositories.Interfaces;
+using JobOpsAPI.Domain.Entities;
 
-namespace JobOps.DataAccess.Implementation
+namespace JobOpsAPI.DataAccess.Repositories.Implementations
 {
-    public class DepartmentRepository : GenericRepository<Department> ,IDepartmentRepository
+    public class DepartmentRepository : GenericRepository<Department>, IDepartmentRepository
     {
         private readonly JobOpsDbContext _context;
 
@@ -41,7 +36,7 @@ namespace JobOps.DataAccess.Implementation
             try
             {
                 int count = _context.Departments
-                    .Where (d => d.DeletedOn == null)
+                    .Where(d => d.DeletedOn == null)
                     .ToList()
                     .Count();
 

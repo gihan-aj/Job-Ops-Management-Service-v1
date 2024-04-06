@@ -15,5 +15,10 @@ namespace JobOps.Domain.Entities
         public Department? Department { get; set; }
         public ICollection<Machine>? Machines { get; set; }
         public List<Employee> Employees { get; } = [];
+        public DateTime? CreatedOn { get; set; }
+        public long? UpdatedBy { get; set; }
+        public DateTime? UpdatedOn { get; set; }
+        public long? DeletedBy { get; set; }
+        public DateTime? DeletedOn { get; set; }
     }
 }

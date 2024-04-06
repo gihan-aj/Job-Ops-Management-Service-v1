@@ -1,24 +1,24 @@
 ﻿using JobOps.DataAccess.Context;
-using JobOps.Domain.Repository;
+using JobOps.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JobOps.DataAccess.Implementation
+namespace JobOps.Domain.Services.Implementation
 {
-    public class UnitOfWork : IUnitOfWork
+    public class MasterDataService : IMasterDataService
     {
         private readonly JobOpsDbContext _context;
 
-        public UnitOfWork(JobOpsDbContext context)
+        public MasterDataService(JobOpsDbContext context) 
         {
             _context = context;
-
-            Department = new DepartmentRepository(_context);
+            Department = new DepartmentService(context);
         }
-        public IDepartmentRepository Department {  get; private set; }
+
+        public IDepartmentService Department { get; private set; }
 
         public void Dispose()
         {

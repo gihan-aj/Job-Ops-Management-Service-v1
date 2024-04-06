@@ -3,11 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobOps.DataAccess", "JobOps.DataAccess\JobOps.DataAccess.csproj", "{08B01D34-6A09-4392-ADEB-E0A3BEEDFFB6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobOps.Domain", "JobOps.Domain\JobOps.Domain.csproj", "{15533D59-375C-4CF6-AE88-A8C38235EBBC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobOpsAPI", "JobOpsAPI\JobOpsAPI.csproj", "{570DC826-E46E-4FD5-8EEF-F551AB722E17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobOpsAPI", "JobOpsAPI\JobOpsAPI.csproj", "{570DC826-E46E-4FD5-8EEF-F551AB722E17}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,14 +11,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{08B01D34-6A09-4392-ADEB-E0A3BEEDFFB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{08B01D34-6A09-4392-ADEB-E0A3BEEDFFB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{08B01D34-6A09-4392-ADEB-E0A3BEEDFFB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{08B01D34-6A09-4392-ADEB-E0A3BEEDFFB6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{15533D59-375C-4CF6-AE88-A8C38235EBBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{15533D59-375C-4CF6-AE88-A8C38235EBBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{15533D59-375C-4CF6-AE88-A8C38235EBBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{15533D59-375C-4CF6-AE88-A8C38235EBBC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{570DC826-E46E-4FD5-8EEF-F551AB722E17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{570DC826-E46E-4FD5-8EEF-F551AB722E17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{570DC826-E46E-4FD5-8EEF-F551AB722E17}.Release|Any CPU.ActiveCfg = Release|Any CPU

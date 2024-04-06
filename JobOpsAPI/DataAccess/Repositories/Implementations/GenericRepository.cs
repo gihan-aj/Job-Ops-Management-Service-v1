@@ -1,14 +1,9 @@
-﻿using JobOps.DataAccess.Context;
-using JobOps.Domain.Repository;
+﻿using JobOpsAPI.DataAccess.Context;
+using JobOpsAPI.DataAccess.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace JobOps.DataAccess.Implementation
+namespace JobOpsAPI.DataAccess.Repositories.Implementations
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
@@ -67,7 +62,7 @@ namespace JobOps.DataAccess.Implementation
             }
         }
 
-        public T GetById(string id)
+        public T? GetById(string id)
         {
             try
             {

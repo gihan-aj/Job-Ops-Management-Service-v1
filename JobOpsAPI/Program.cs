@@ -1,6 +1,6 @@
-using JobOps.DataAccess.Context;
-using JobOps.DataAccess.Implementation;
-using JobOps.Domain.Repository;
+using JobOpsAPI.DataAccess.Context;
+using JobOpsAPI.Domain.Services.Implementations;
+using JobOpsAPI.Domain.Services.Interfaces;
 using LoggerLib;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,10 +15,10 @@ builder.Services.AddSwaggerGen();
 
 // Entity Framework
 builder.Services.AddDbContext<JobOpsDbContext>(options
-    => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("JobOpsAPI")));
+    => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Unit of work
-builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddTransient<IMasterDataService, MasterDataService>();
 
 // Logger library
 builder.Services.AddSingleton<IFileLogger, FileLogger>();
