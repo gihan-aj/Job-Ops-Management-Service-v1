@@ -19,7 +19,7 @@ namespace JobOpsAPI.Domain.Services.Implementations
 
         private IDepartmentRepository Repository { get; set; }
 
-        public void AddSingle(int user, DepartmentPostRequest request)
+        public void AddSingle(int user, DepartmentPostDTO request)
         {
             try
             {
@@ -69,14 +69,14 @@ namespace JobOpsAPI.Domain.Services.Implementations
             }
         }
 
-        public DepartmentGetResponse? GetById(string id)
+        public DepartmentGetDTO? GetById(string id)
         {
             try
             {
                 var department = Repository.GetById(id);
                 if (department != null)
                 {
-                    var response = new DepartmentGetResponse()
+                    var response = new DepartmentGetDTO()
                     {
                         Id = department.Id,
                         Name = department.Name,
@@ -94,18 +94,18 @@ namespace JobOpsAPI.Domain.Services.Implementations
             }
         }
 
-        public IEnumerable<DepartmentGetResponse>? GetByPageNumber(int page, int pageSize)
+        public IEnumerable<DepartmentGetDTO>? GetByPageNumber(int page, int pageSize)
         {
             try
             {
-                List<DepartmentGetResponse> response = new List<DepartmentGetResponse>();
+                List<DepartmentGetDTO> response = new List<DepartmentGetDTO>();
 
                 var departments = Repository.GetByPageNumber(page, pageSize);
                 if (departments != null)
                 {
                     foreach (var department in departments)
                     {
-                        response.Add(new DepartmentGetResponse()
+                        response.Add(new DepartmentGetDTO()
                         {
                             Id = department.Id,
                             Name = department.Name,
@@ -121,7 +121,19 @@ namespace JobOpsAPI.Domain.Services.Implementations
             }
         }
 
-        public void UpdateSingle(int user, DepartmentPostRequest request)
+        public int GetCount()
+        {
+            try
+            {
+                return Repository.GetDataCount();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void UpdateSingle(int user, DepartmentPostDTO request)
         {
             try
             {

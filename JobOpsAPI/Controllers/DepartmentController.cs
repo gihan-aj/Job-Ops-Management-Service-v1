@@ -5,6 +5,7 @@ using LoggerLib;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata.Ecma335;
+using static JobOpsAPI.Domain.DTOs.Department.DepartmentServiceResponses;
 
 namespace JobOpsAPI.Controllers
 {
@@ -28,14 +29,21 @@ namespace JobOpsAPI.Controllers
             {
                 _logger.LogInfo("DepartmentController : Get() called");
 
-                List<DepartmentGetResponse>? departments = _dataService.Department.GetByPageNumber(page, pageSize).ToList();
+                List<DepartmentGetDTO> departments = _dataService.Department.GetByPageNumber(page, pageSize).ToList();
 
                 if(departments != null && departments.Count > 0)
                 {
                     _logger.LogInfo("DepartmentController : Get() successful");
                 }
+                else
+                {
+                    _logger.LogInfo("DepartmentController : Get() No data found");
+                    departments = [];
+                }
 
-                return Ok(departments);
+                int count = _dataService.Department.GetCount();
+
+                return Ok(new DepartmentGetResponse(true, count, departments));
             }
             catch (Exception ex)
             {
@@ -46,13 +54,13 @@ namespace JobOpsAPI.Controllers
         }
 
         [HttpGet("id")]
-        public ActionResult<DepartmentGetResponse> GetById(string id)
+        public ActionResult<DepartmentGetDTO> GetById(string id)
         {
             try
             {
                 _logger.LogInfo("DepartmentController : GetById() called");
 
-                DepartmentGetResponse? department = _dataService.Department.GetById(id);
+                DepartmentGetDTO? department = _dataService.Department.GetById(id);
                 if(department == null)
                 {
                     _logger.LogInfo($"DepartmentController : GetById() : Department({id}) not found");
@@ -71,7 +79,7 @@ namespace JobOpsAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult<DepartmentGetResponse> Add(int user, [FromBody]DepartmentPostRequest department)
+        public ActionResult<DepartmentGetDTO> Add(int user, [FromBody]DepartmentPostDTO department)
         {
             try
             {
