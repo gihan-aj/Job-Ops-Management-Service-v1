@@ -130,7 +130,7 @@ namespace JobOpsAPI.Controllers
         }
 
         [HttpPut("delete")]
-        public ActionResult<DepartmentGetDTO> Delete(int user, string id)
+        public ActionResult Delete(int user, string id)
         {
             try
             {

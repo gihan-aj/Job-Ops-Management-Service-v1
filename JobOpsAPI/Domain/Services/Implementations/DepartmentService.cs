@@ -10,14 +10,13 @@ namespace JobOpsAPI.Domain.Services.Implementations
     public class DepartmentService : IDepartmentService
     {
         private readonly JobOpsDbContext _context;
+        private IDepartmentRepository _repository;
 
         public DepartmentService(JobOpsDbContext context)
         {
             _context = context;
-            Repository = new DepartmentRepository(_context);
-        }
-
-        private IDepartmentRepository Repository { get; set; }
+            _repository = new DepartmentRepository(_context);
+        }      
 
         public void AddSingle(int user, DepartmentPostDTO request)
         {
@@ -26,7 +25,7 @@ namespace JobOpsAPI.Domain.Services.Implementations
                 if (string.IsNullOrEmpty(request.Id)) throw new ArgumentNullException(nameof(request.Id));
                 if (string.IsNullOrEmpty(request.Name)) throw new ArgumentNullException(nameof(request.Name));
 
-                var existingData = Repository.GetById(request.Id);
+                var existingData = _repository.GetById(request.Id);
                 if (existingData != null)
                 {
                     throw new InvalidOperationException($"Id already exists.");
@@ -41,7 +40,7 @@ namespace JobOpsAPI.Domain.Services.Implementations
 
                 };
 
-                Repository.Add(newDepartment);
+                _repository.Add(newDepartment);
 
             }
             catch (Exception)
@@ -56,7 +55,7 @@ namespace JobOpsAPI.Domain.Services.Implementations
             {
                 if (string.IsNullOrEmpty(id)) throw new ArgumentNullException(nameof(id));
 
-                var department = Repository.GetById(id);
+                var department = _repository.GetById(id);
                 if (department != null)
                 {
                     department.DeletedBy = user;
@@ -67,7 +66,7 @@ namespace JobOpsAPI.Domain.Services.Implementations
                     throw new Exception($"Id does not exist");
                 }
 
-                Repository.Update(department);
+                _repository.Update(department);
             }
             catch (Exception)
             {
@@ -79,7 +78,7 @@ namespace JobOpsAPI.Domain.Services.Implementations
         {
             try
             {
-                var department = Repository.GetById(id);
+                var department = _repository.GetById(id);
                 if (department != null)
                 {
                     if(department.DeletedBy != null)
@@ -110,7 +109,7 @@ namespace JobOpsAPI.Domain.Services.Implementations
             {
                 List<DepartmentGetDTO> response = new List<DepartmentGetDTO>();
 
-                var departments = Repository.GetByPageNumber(page, pageSize);
+                var departments = _repository.GetByPageNumber(page, pageSize);
                 if (departments != null)
                 {
                     foreach (var department in departments)
@@ -135,7 +134,7 @@ namespace JobOpsAPI.Domain.Services.Implementations
         {
             try
             {
-                return Repository.GetDataCount();
+                return _repository.GetDataCount();
             }
             catch (Exception)
             {
@@ -150,7 +149,7 @@ namespace JobOpsAPI.Domain.Services.Implementations
                 if (string.IsNullOrEmpty(request.Id)) throw new ArgumentNullException(nameof(request.Id));
                 if (string.IsNullOrEmpty(request.Name)) throw new ArgumentNullException(nameof(request.Name));
 
-                var department = Repository.GetById(request.Id);
+                var department = _repository.GetById(request.Id);
                 if (department != null)
                 {
                     department.Name = request.Name;
@@ -162,7 +161,7 @@ namespace JobOpsAPI.Domain.Services.Implementations
                     throw new Exception($"Id does not exist");
                 }
 
-                Repository.Update(department);
+                _repository.Update(department);
 
             }
             catch (Exception)

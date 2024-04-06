@@ -7,6 +7,7 @@
         public Section Section { get; set; } = null!;
         public Employee Employee { get; set; } = null!;
 
+        public long? CreatedBy { get; set; }
         public DateTime? CreatedOn { get; set; }
         public long? UpdatedBy { get; set; }
         public DateTime? UpdatedOn { get; set; }

@@ -12,9 +12,11 @@ namespace JobOpsAPI.Domain.Services.Implementations
             _context = context;
 
             Department = new DepartmentService(context);
+            Section = new SectionService(context);
         }
 
         public IDepartmentService Department { get; private set; }
+        public ISectionService Section { get; private set; }
 
         public void Dispose()
         {

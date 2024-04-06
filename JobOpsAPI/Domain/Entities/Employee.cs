@@ -12,6 +12,7 @@
         public string SectionId { get; set; } = string.Empty;
         public List<Section> Sections { get; } = [];
 
+        public long? CreatedBy { get; set; }
         public DateTime? CreatedOn { get; set; }
         public long? UpdatedBy { get; set; }
         public DateTime? UpdatedOn { get; set; }
