@@ -4,6 +4,7 @@
     {
         public required string Id { get; set; }
         public required string Name { get; set; }
+        public bool Status { get; set; }
 
         public ICollection<Section>? Sections { get; set; }
 

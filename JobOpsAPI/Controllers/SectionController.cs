@@ -22,13 +22,13 @@ namespace JobOpsAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<SectionGetResponse>> Get(int page, int pageSize)
+        public ActionResult<List<SectionGetResponse>> Get(int page, int pageSize, string departmentId)
         {
             try
             {
                 _logger.LogInfo("SectionController : Get() called");
 
-                List<SectionGetDTO> sections = _dataService.Section.GetByPageNumber(page, pageSize).ToList();
+                List<SectionGetDTO> sections = _dataService.Section.GetByPageNumber(page, pageSize, departmentId).ToList();
 
                 if (sections != null && sections.Count > 0)
                 {
@@ -40,26 +40,25 @@ namespace JobOpsAPI.Controllers
                     sections = [];
                 }
 
-                int count = _dataService.Section.GetCount();
+                int count = _dataService.Section.GetCount(departmentId);
 
                 return Ok(new SectionGetResponse(true, count, sections));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"SectionController : Get() -> {ex.Message}");
-                _logger.LogError($"SectionController : Get() -> Exception : {ex}");
+                _logger.LogError($"SectionController : Get() -> {ex}");
                 return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
             }
         }
 
         [HttpGet("id")]
-        public ActionResult<SectionGetDTO> GetById(string id)
+        public ActionResult<SectionGetByIdDTO> GetById(string id)
         {
             try
             {
                 _logger.LogInfo("SectionController : GetById() called");
 
-                SectionGetDTO? section = _dataService.Section.GetById(id);
+                SectionGetByIdDTO? section = _dataService.Section.GetByIdWithParent(id);
                 if (section == null)
                 {
                     _logger.LogInfo($"SectionController : GetById() : Section({id}) not found");
@@ -71,8 +70,7 @@ namespace JobOpsAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"SectionController : GetById() -> {ex.Message}");
-                _logger.LogError($"SectionController : GetById() -> Exception : {ex}");
+                _logger.LogError($"SectionController : GetById() -> {ex}");
                 return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
             }
         }
@@ -93,14 +91,13 @@ namespace JobOpsAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"SectionController : Add() -> {ex.Message}");
-                _logger.LogError($"SectionController : Add() -> Exception : {ex}");
+                _logger.LogError($"SectionController : Add() -> {ex}");
                 return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
             }
         }
 
         [HttpPut("update")]
-        public ActionResult<SectionGetDTO> Update(int user, [FromBody] SectionPostDTO request)
+        public ActionResult<SectionGetDTO> Update(int user, [FromBody] SectionPutDTO request)
         {
             try
             {
@@ -122,8 +119,49 @@ namespace JobOpsAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"SectionController : Update() -> {ex.Message}");
-                _logger.LogError($"SectionController : Update() -> Exception : {ex}");
+                _logger.LogError($"SectionController : Update() -> {ex}");
+                return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
+            }
+        }
+
+        [HttpPut("activate")]
+        public ActionResult Activate(int user, [FromBody] string[] ids)
+        {
+            try
+            {
+                _logger.LogInfo("SectionController : Activate() called");
+
+                _dataService.Section.Activate(user, ids);
+                _dataService.Save();
+
+                _logger.LogInfo("SectionController : Activate() successful");
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"SectionController : Activate() -> {ex}");
+                return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
+            }
+        }
+
+        [HttpPut("deactivate")]
+        public ActionResult Deactivate(int user, [FromBody] string[] ids)
+        {
+            try
+            {
+                _logger.LogInfo("SectionController : Activate() called");
+
+                _dataService.Section.Deactivate(user, ids);
+                _dataService.Save();
+
+                _logger.LogInfo("SectionController : Activate() successful");
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"SectionController : Activate() -> {ex}");
                 return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
             }
         }
@@ -146,6 +184,27 @@ namespace JobOpsAPI.Controllers
             {
                 _logger.LogError($"SectionController : Delete() -> {ex.Message}");
                 _logger.LogError($"SectionController : Delete() -> Exception : {ex}");
+                return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
+            }
+        }
+
+        [HttpPut("bulk-delete")]
+        public ActionResult DeleteMultiple(int user, [FromBody] string[] ids)
+        {
+            try
+            {
+                _logger.LogInfo("SectionController : DeleteMultiple() called");
+
+                _dataService.Section.SoftDeleteMultiple(user, ids);
+                _dataService.Save();
+
+                _logger.LogInfo("SectionController : DeleteMultiple() successful");
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"SectionController : DeleteMultiple() -> {ex}");
                 return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
             }
         }

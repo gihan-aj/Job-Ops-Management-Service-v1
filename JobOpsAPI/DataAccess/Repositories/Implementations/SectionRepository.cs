@@ -14,13 +14,13 @@ namespace JobOpsAPI.DataAccess.Repositories.Implementations
             _context = context;
         }
 
-        public IEnumerable<Section>? GetByPageNumber(int page, int pageSize)
+        public IEnumerable<Section>? GetByPageNumber(int page, int pageSize, string departmentId)
         {
             try
             {
                 var sections = _context.Sections
                     .Include(s => s.Department)
-                    .Where(d => d.DeletedOn == null)
+                    .Where(d => d.DepartmentId == departmentId && d.DeletedOn == null)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToList();
@@ -33,12 +33,12 @@ namespace JobOpsAPI.DataAccess.Repositories.Implementations
             }
         }
 
-        public int GetDataCount()
+        public int GetDataCount(string departmentId)
         {
             try
             {
                 int count = _context.Sections
-                    .Where(d => d.DeletedOn == null)
+                    .Where(d => d.DepartmentId == departmentId && d.DeletedOn == null)
                     .ToList()
                     .Count();
 

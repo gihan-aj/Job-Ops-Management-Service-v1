@@ -1,6 +1,7 @@
 ﻿using JobOpsAPI.DataAccess.Context;
 using JobOpsAPI.DataAccess.Repositories.Interfaces;
 using JobOpsAPI.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace JobOpsAPI.DataAccess.Repositories.Implementations
 {
@@ -47,5 +48,22 @@ namespace JobOpsAPI.DataAccess.Repositories.Implementations
                 throw;
             }
         }
+
+        public Department? GetByIdWithNavigationProperty(string Id)
+        {
+            try
+            {
+                var department = _context.Departments
+                    .Include(d => d.Sections)
+                    .Where(d => d.Id == Id)
+                    .FirstOrDefault();
+
+                return department;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        } 
     }
 }

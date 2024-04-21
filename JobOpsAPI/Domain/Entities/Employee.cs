@@ -5,6 +5,7 @@
         public required string Id { get; set; }
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
+        public bool Status { get; set; }
 
         public string JobTitleId { get; set; } = string.Empty;
         public JobTitle JobTitle { get; set; } = null!;

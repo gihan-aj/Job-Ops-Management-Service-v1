@@ -1,9 +1,12 @@
-﻿using JobOpsAPI.DataAccess.Context;
+﻿using Azure.Core;
+using JobOpsAPI.DataAccess.Context;
 using JobOpsAPI.DataAccess.Repositories.Implementations;
 using JobOpsAPI.DataAccess.Repositories.Interfaces;
 using JobOpsAPI.Domain.DTOs.Department;
+using JobOpsAPI.Domain.DTOs.Section;
 using JobOpsAPI.Domain.Entities;
 using JobOpsAPI.Domain.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace JobOpsAPI.Domain.Services.Implementations
 {
@@ -35,6 +38,7 @@ namespace JobOpsAPI.Domain.Services.Implementations
                 {
                     Id = request.Id,
                     Name = request.Name,
+                    Status = true,
                     CreatedBy = user,
                     CreatedOn = DateTime.Now,
 
@@ -74,6 +78,59 @@ namespace JobOpsAPI.Domain.Services.Implementations
             }
         }
 
+        public DepartmentGetByIdDTO? GetByIdWithChildEntities(string id)
+        {
+            try
+            {
+                var department = _repository.GetByIdWithNavigationProperty(id);
+                if (department != null)
+                {
+                    if(department.DeletedBy != null)
+                    {
+                        throw new Exception("Data already been deleted");
+                    }
+
+                    var associatedSections = new List<SectionGetDTO>();
+                    if(department.Sections != null && department.Sections.Count > 0)
+                    {
+                        foreach (var section in department.Sections)
+                        {
+                            if(section.DeletedOn == null && section.Status == true)
+                            {
+                                var sectionDTO = new SectionGetDTO()
+                                {
+                                    Id = section.Id,
+                                    Name = section.Name,
+                                    Description = section.Description,
+                                    Status = section.Status,
+                                };
+
+                                associatedSections.Add(sectionDTO);
+                            }
+
+                        }
+                    }
+
+                    var response = new DepartmentGetByIdDTO()
+                    {
+                        Id = department.Id,
+                        Name = department.Name,
+                        Status = department.Status,
+                        Sections = associatedSections
+                    };
+                    return response;
+                }
+
+                throw new Exception($"Data does not exist");
+
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public DepartmentGetDTO? GetById(string id)
         {
             try
@@ -81,14 +138,16 @@ namespace JobOpsAPI.Domain.Services.Implementations
                 var department = _repository.GetById(id);
                 if (department != null)
                 {
-                    if(department.DeletedBy != null)
+                    if (department.DeletedBy != null)
                     {
                         throw new Exception("Data already been deleted");
                     }
+
                     var response = new DepartmentGetDTO()
                     {
                         Id = department.Id,
                         Name = department.Name,
+                        Status = department.Status,
                     };
                     return response;
                 }
@@ -118,6 +177,7 @@ namespace JobOpsAPI.Domain.Services.Implementations
                         {
                             Id = department.Id,
                             Name = department.Name,
+                            Status = department.Status,
                         });
                     }
                 }
@@ -142,7 +202,7 @@ namespace JobOpsAPI.Domain.Services.Implementations
             }
         }
 
-        public void UpdateSingle(int user, DepartmentPostDTO request)
+        public void UpdateSingle(int user, DepartmentPutDTO request)
         {
             try
             {
@@ -163,6 +223,74 @@ namespace JobOpsAPI.Domain.Services.Implementations
 
                 _repository.Update(department);
 
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void Activate(int user, string[] departmentIds)
+        {
+            try
+            {
+                if (departmentIds == null || departmentIds.Count() == 0) throw new ArgumentNullException(nameof(departmentIds));
+
+                foreach (var departmentId in departmentIds)
+                {
+                    var department = _repository.GetById(departmentId);
+                    if (department != null)
+                    {
+                        department.Status = true;
+                        _repository.Update(department);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void Deactivate(int user, string[] departmentIds)
+        {
+            try
+            {
+                if (departmentIds == null || departmentIds.Count() == 0) throw new ArgumentNullException(nameof(departmentIds));
+
+                foreach (var departmentId in departmentIds)
+                {
+                    var department = _repository.GetById(departmentId);
+                    if (department != null)
+                    {
+                        department.Status = false;
+                        _repository.Update(department);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void SoftDeleteMultiple(int user, string[] departmentIds)
+        {
+            try
+            {
+                if (departmentIds == null || departmentIds.Count() == 0) throw new ArgumentNullException(nameof(departmentIds));
+
+                foreach (var departmentId in departmentIds)
+                {
+                    var department = _repository.GetById(departmentId);
+                    if (department != null)
+                    {
+                        department.DeletedBy = user;
+                        department.DeletedOn = DateTime.Now;
+
+                        _repository.Update(department);
+                    }
+                }
             }
             catch (Exception)
             {

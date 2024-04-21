@@ -5,6 +5,7 @@
         public required string Id { get; set; }
         public required string Title { get; set; }
         public string Description { get; set; } = string.Empty;
+        public bool Status { get; set; }
 
         public ICollection<Employee>? Employees { get; set; }
 

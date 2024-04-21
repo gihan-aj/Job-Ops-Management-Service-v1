@@ -47,20 +47,19 @@ namespace JobOpsAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"DepartmentController : Get() -> {ex.Message}");
-                _logger.LogError($"DepartmentController : Get() -> Exception : {ex}");
+                _logger.LogError($"DepartmentController : Get() -> {ex}");
                 return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
             }
         }
 
         [HttpGet("id")]
-        public ActionResult<DepartmentGetDTO> GetById(string id)
+        public ActionResult<DepartmentGetByIdDTO> GetById(string id)
         {
             try
             {
                 _logger.LogInfo("DepartmentController : GetById() called");
 
-                DepartmentGetDTO? department = _dataService.Department.GetById(id);
+                DepartmentGetByIdDTO? department = _dataService.Department.GetByIdWithChildEntities(id);
                 if(department == null)
                 {
                     _logger.LogInfo($"DepartmentController : GetById() : Department({id}) not found");
@@ -72,8 +71,7 @@ namespace JobOpsAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"DepartmentController : GetById() -> {ex.Message}");
-                _logger.LogError($"DepartmentController : GetById() -> Exception : {ex}");
+                _logger.LogError($"DepartmentController : GetById() -> {ex}");
                 return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
             }
         }
@@ -94,14 +92,13 @@ namespace JobOpsAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"DepartmentController : Add() -> {ex.Message}");
-                _logger.LogError($"DepartmentController : Add() -> Exception : {ex}");
+                _logger.LogError($"DepartmentController : Add() -> {ex}");
                 return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
             }
         }
 
         [HttpPut("update")]
-        public ActionResult<DepartmentGetDTO> Update(int user, [FromBody]DepartmentPostDTO request)
+        public ActionResult<DepartmentGetDTO> Update(int user, [FromBody]DepartmentPutDTO request)
         {
             try
             {
@@ -123,8 +120,49 @@ namespace JobOpsAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"DepartmentController : Update() -> {ex.Message}");
-                _logger.LogError($"DepartmentController : Update() -> Exception : {ex}");
+                _logger.LogError($"DepartmentController : Update() -> {ex}");
+                return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
+            }
+        }
+
+        [HttpPut("bulk-activate")]
+        public ActionResult Activate(int user, [FromBody] string[] ids)
+        {
+            try
+            {
+                _logger.LogInfo("DepartmentController : Activate() called");
+
+                _dataService.Department.Activate(user, ids);
+                _dataService.Save();
+
+                _logger.LogInfo("DepartmentController : Activate() successful");
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"DepartmentController : Activate() -> {ex}");
+                return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
+            }
+        }
+
+        [HttpPut("bulk-deactivate")]
+        public ActionResult Deactivate(int user, [FromBody] string[] ids)
+        {
+            try
+            {
+                _logger.LogInfo("DepartmentController : Deactivate() called");
+
+                _dataService.Department.Deactivate(user, ids);
+                _dataService.Save();
+
+                _logger.LogInfo("DepartmentController : Deactivate() successful");
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"DepartmentController : Deactivate() -> {ex}");
                 return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
             }
         }
@@ -145,8 +183,28 @@ namespace JobOpsAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"DepartmentController : Delete() -> {ex.Message}");
-                _logger.LogError($"DepartmentController : Delete() -> Exception : {ex}");
+                _logger.LogError($"DepartmentController : Delete() -> {ex}");
+                return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
+            }
+        }
+
+        [HttpPut("bulk-delete")]
+        public ActionResult MultipleDelete(int user, [FromBody]string[] ids)
+        {
+            try
+            {
+                _logger.LogInfo("DepartmentController : MultipleDelete() called");
+
+                _dataService.Department.SoftDeleteMultiple(user, ids);
+                _dataService.Save();
+
+                _logger.LogInfo("DepartmentController : MultipleDelete() successful");
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"DepartmentController : MultipleDelete() -> {ex}");
                 return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
             }
         }

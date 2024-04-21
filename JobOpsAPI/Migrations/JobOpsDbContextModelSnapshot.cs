@@ -43,6 +43,9 @@ namespace JobOpsAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
                     b.Property<long?>("UpdatedBy")
                         .HasColumnType("bigint");
 
@@ -87,6 +90,9 @@ namespace JobOpsAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
                     b.Property<long?>("UpdatedBy")
                         .HasColumnType("bigint");
 
@@ -120,6 +126,9 @@ namespace JobOpsAPI.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -164,6 +173,9 @@ namespace JobOpsAPI.Migrations
                     b.Property<string>("SectionId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
                     b.Property<long?>("UpdatedBy")
                         .HasColumnType("bigint");
 
@@ -204,6 +216,9 @@ namespace JobOpsAPI.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<long?>("UpdatedBy")
                         .HasColumnType("bigint");

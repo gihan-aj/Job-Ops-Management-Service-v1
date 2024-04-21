@@ -5,6 +5,7 @@
         public required string Id { get; set; }
         public required string Name { get; set; }
         public string Description { get; set; } = string.Empty;
+        public bool Status { get; set; }
 
         public string DepartmentId { get; set; } = string.Empty;
         public Department? Department { get; set; }
