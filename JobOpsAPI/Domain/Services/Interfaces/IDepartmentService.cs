@@ -9,6 +9,8 @@ namespace JobOpsAPI.Domain.Services.Interfaces
         int GetCount();
         DepartmentGetByIdDTO? GetByIdWithChildEntities(string id);
         DepartmentGetDTO? GetById(string id);
+        IEnumerable<DepartmentGetDTO>? GetBySearch(int page, int pageSize, string keyWord);
+        int GetSearchResultCount(string keyWord);
         void AddSingle(int user, DepartmentPostDTO request);
         void UpdateSingle(int user, DepartmentPutDTO request);
         void SoftDeleteSingle(int user, string id);

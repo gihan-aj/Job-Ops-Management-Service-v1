@@ -49,6 +49,41 @@ namespace JobOpsAPI.DataAccess.Repositories.Implementations
             }
         }
 
+        public IEnumerable<Department>? GetBySearch(int page, int pageSize, string keyWord)
+        {
+            try
+            {
+                var departments = _context.Departments
+                    .Where(d => d.DeletedOn == null && (d.Id.Contains(keyWord) || d.Name.Contains(keyWord)))
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                return departments;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public int GetSearchResultDataCount(string keyWord)
+        {
+            try
+            {
+                int count = _context.Departments
+                    .Where(d => d.DeletedOn == null && (d.Id.Contains(keyWord) || d.Name.Contains(keyWord)))
+                    .ToList()
+                    .Count();
+
+                return count;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public Department? GetByIdWithNavigationProperty(string Id)
         {
             try

@@ -8,7 +8,7 @@ using static JobOpsAPI.Domain.DTOs.ServiceResponses;
 
 namespace JobOpsAPI.Controllers
 {
-    [Route("api/section")]
+    [Route("api/sections")]
     [ApiController]
     public class SectionController : ControllerBase
     {

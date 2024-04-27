@@ -202,6 +202,46 @@ namespace JobOpsAPI.Domain.Services.Implementations
             }
         }
 
+        public IEnumerable<DepartmentGetDTO>? GetBySearch(int page, int pageSize, string keyWord)
+        {
+            try
+            {
+                List<DepartmentGetDTO> response = new List<DepartmentGetDTO>();
+
+                var departments = _repository.GetBySearch(page, pageSize, keyWord);
+                if (departments != null)
+                {
+                    foreach (var department in departments)
+                    {
+                        response.Add(new DepartmentGetDTO()
+                        {
+                            Id = department.Id,
+                            Name = department.Name,
+                            Status = department.Status,
+                        });
+                    }
+                }
+
+                return response;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public int GetSearchResultCount(string keyWord)
+        {
+            try
+            {
+                return _repository.GetSearchResultDataCount(keyWord);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public void UpdateSingle(int user, DepartmentPutDTO request)
         {
             try

@@ -9,7 +9,7 @@ using static JobOpsAPI.Domain.DTOs.ServiceResponses;
 
 namespace JobOpsAPI.Controllers
 {
-    [Route("api/department")]
+    [Route("api/departments")]
     [ApiController]
     public class DepartmentController : ControllerBase
     {
@@ -48,7 +48,37 @@ namespace JobOpsAPI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"DepartmentController : Get() -> {ex}");
-                return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
+                return StatusCode(500, $"{ex.Message}");
+            }
+        }
+
+        [HttpGet("search")]
+        public ActionResult<List<DepartmentGetResponse>> GetBySearch(int page, int pageSize, string keyWord)
+        {
+            try
+            {
+                _logger.LogInfo("DepartmentController : GetBySearch() called");
+
+                List<DepartmentGetDTO> departments = _dataService.Department.GetBySearch(page, pageSize, keyWord).ToList();
+
+                if (departments != null && departments.Count > 0)
+                {
+                    _logger.LogInfo("DepartmentController : GetBySearch() successful");
+                }
+                else
+                {
+                    _logger.LogInfo("DepartmentController : GetBySearch() No data found");
+                    departments = [];
+                }
+
+                int count = _dataService.Department.GetSearchResultCount(keyWord);
+
+                return Ok(new DepartmentGetResponse(true, count, departments));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"DepartmentController : Get() -> {ex}");
+                return StatusCode(500, $"{ex.Message}");
             }
         }
 
@@ -72,7 +102,7 @@ namespace JobOpsAPI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"DepartmentController : GetById() -> {ex}");
-                return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
+                return StatusCode(500, $"{ex.Message}");
             }
         }
 
@@ -93,7 +123,7 @@ namespace JobOpsAPI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"DepartmentController : Add() -> {ex}");
-                return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
+                return StatusCode(500, $"{ex.Message}");
             }
         }
 
@@ -121,7 +151,7 @@ namespace JobOpsAPI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"DepartmentController : Update() -> {ex}");
-                return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
+                return StatusCode(500, $"{ex.Message}");
             }
         }
 
@@ -142,7 +172,7 @@ namespace JobOpsAPI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"DepartmentController : Activate() -> {ex}");
-                return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
+                return StatusCode(500, $"{ex.Message}");
             }
         }
 
@@ -163,7 +193,7 @@ namespace JobOpsAPI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"DepartmentController : Deactivate() -> {ex}");
-                return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
+                return StatusCode(500, $"{ex.Message}");
             }
         }
 
@@ -184,7 +214,7 @@ namespace JobOpsAPI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"DepartmentController : Delete() -> {ex}");
-                return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
+                return StatusCode(500, $"{ex.Message}");
             }
         }
 
@@ -205,7 +235,7 @@ namespace JobOpsAPI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"DepartmentController : MultipleDelete() -> {ex}");
-                return StatusCode(500, $"Internal server error occurred. \n{ex.Message}");
+                return StatusCode(500, $"{ex.Message}");
             }
         }
     }
